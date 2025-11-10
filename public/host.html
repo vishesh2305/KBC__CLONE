@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBC Host Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>KBC Host Panel</h1>
+        <p>Event management controls.</p>
+        <a href="/">Back to Game</a> |
+        <a href="/admin.html">Manage Questions</a> | 
+        <a href="/leaderboard.html">View Leaderboard</a>
+
+        <div style="margin-top: 30px; border-top: 2px solid #ffd700; padding-top: 20px;">
+            <h2>Event Controls</h2>
+            <p>
+                Warning: This will permanently delete all scores.
+                Use this to reset the event.
+            </p>
+            <button id="clear-leaderboard-btn" class="delete-btn">
+                Clear Entire Leaderboard
+            </button>
+        </div>
+    </div>
+    <script src="host.js"></script>
+</body>
+</html>

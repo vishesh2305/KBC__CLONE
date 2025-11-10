@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBC Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>KBC Admin Panel</h1>
+        <p>Manage the question bank for the game.</p>
+        <a href="/">Back to Game</a> | 
+        <a href="/leaderboard.html">View Leaderboard</a>
+
+        <h2 id="form-title">Add New Question</h2>
+        <form id="admin-form">
+            <input type="hidden" id="question-id">
+            <div>
+                <label for="question-text">Question:</label>
+                <input type="text" id="question-text" required>
+            </div>
+            <div>
+                <label for="answer-1">Answer A:</label>
+                <input type="text" id="answer-1" required>
+            </div>
+            <div>
+                <label for="answer-2">Answer B:</label>
+                <input type="text" id="answer-2" required>
+            </div>
+            <div>
+                <label for="answer-3">Answer C:</label>
+                <input type="text" id="answer-3" required>
+            </div>
+            <div>
+                <label for="answer-4">Answer D:</label>
+                <input type="text" id="answer-4" required>
+            </div>
+            <div>
+                <label for="correct-answer">Correct Answer (Index 0-3):</label>
+                <select id="correct-answer" required>
+                    <option value="0">A (Index 0)</option>
+                    <option value="1">B (Index 1)</option>
+                    <option value="2">C (Index 2)</option>
+                    <option value="3">D (Index 3)</option>
+                </select>
+            </div>
+            <div>
+                <label for="difficulty">Difficulty (1-15):</label>
+                <input type="number" id="difficulty" min="1" max="15" value="1" required>
+            </div>
+            <button type="submit" id="submit-btn">Add Question</button>
+            <button type="button" id="clear-btn" style="display: none;">Cancel Edit</button>
+        </form>
+
+        <h2>Manage Questions</h2>
+        <table id="questions-table" class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Difficulty</th>
+                    <th>Question</th>
+                    <th>Correct Answer</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

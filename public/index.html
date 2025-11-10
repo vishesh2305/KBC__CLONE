@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaun Banega Crorepati</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="images/KBC_logo.jpg" alt="KBC Logo" class="kbc-logo"/>
+    <h1>🎯 Kaun Banega Crorepati</h1>
+
+    <main class="kbc-layout">
+      
+      <section class="left-panel">
+        <div id="timer">⏳ Time Left: 45s</div>
+        <div id="prize-money">🏆 Current Prize: ₹0</div>
+        <div id="question-box">
+          <div id="question" class="question-text">Loading...</div>
+          <div id="answers" class="options-grid">
+            </div>
+          
+          <button id="next-question-btn" style="display: none;">
+            Next Question
+          </button>
+          
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <div id="lifelines">
+          <button class="lifeline" id="lifeline-5050" onclick="KBC.use5050(this)">
+            <img src="images/50_50.jpg" alt="50-50" />
+          </button>
+          <button class="lifeline" id="lifeline-phone" onclick="KBC.usePhone(this)">
+            <img src="images/phone_a_friend.jpg" alt="Phone a Friend" />
+          </button>
+          <button class="lifeline" id="lifeline-poll" onclick="KBC.usePoll(this)">
+            <img src="images/audience_poll.jpg" alt="Audience Poll" />
+          </button>
+          <button id="quit-button" onclick="KBC.quitGame()">QUIT</button>
+        </div>
+
+        <div id="prize-ladder">
+          </div>
+      </section>
+    </main>
+
+    <div id="result"></div>
+  </div>
+
+  <div id="start-modal" class="modal-overlay visible">
+    <div class="modal-content">
+      <h2>Welcome to KBC!</h2>
+      <p>Please enter your name to begin:</p>
+      <input type="text" id="player-name-input" placeholder="Enter Your Name" />
+      <button id="start-modal-btn">Start Game</button>
+    </div>
+  </div>
+
+  <div id="game-over-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="game-over-title">Game Over!</h2>
+      <p id="game-over-message">Thanks for playing!</p>
+      <div class="final-prize-container">
+        You won: <span id="final-prize" class="final-prize">₹0</span>
+      </div>
+      <button id="play-again-btn">Play Again</button>
+      <button id="leaderboard-btn">View Leaderboard</button>
+    </div>
+  </div>
+
+  <div id="poll-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>📊 Audience Poll</h2>
+      <p>The audience has voted...</p>
+      <div id="poll-chart">
+        <div class="poll-bar" id="poll-bar-A">
+          <span class="poll-bar-percent">0%</span>
+          <span class="poll-bar-label">A</span>
+        </div>
+        <div class="poll-bar" id="poll-bar-B">
+          <span class="poll-bar-percent">0%</span>
+          <span class="poll-bar-label">B</span>
+        </div>
+        <div class="poll-bar" id="poll-bar-C">
+          <span class="poll-bar-percent">0%</span>
+          <span class="poll-bar-label">C</span>
+        </div>
+        <div class="poll-bar" id="poll-bar-D">
+          <span class="poll-bar-percent">0%</span>
+          <span class="poll-bar-label">D</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="KBC.closeModal('poll-modal')">Close</button>
+    </div>
+  </div>
+
+  <div id="phone-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>📞 Phone-a-Friend</h2>
+      <div id="phone-modal-status">Calling your friend... ☎️</div>
+      <div id="phone-modal-answer">Your friend thinks the answer is: <strong></strong></div>
+      <button class_name="modal-close-btn" id="phone-modal-close" onclick="KBC.closeModal('phone-modal')">OK</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

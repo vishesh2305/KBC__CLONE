@@ -1,0 +1,523 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #0b0c2a;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+.container {
+  max-width: 750px;
+  margin: auto;
+}
+
+.kbc-logo {
+  width: 150px;
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 10px 0 20px;
+}
+
+.kbc-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.left-panel {
+  flex: 1 1 60%;
+  min-width: 100px;
+  background-color: #1a1a40;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.right-panel {
+  flex: 1 1 35%;
+  min-width: 150px;
+  background-color: #131339;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+#question {
+  font-size: 1.3em;
+  margin-bottom: 15px;
+  background-color: #000a7c;
+  padding: 15px;
+  border: 3px solid #ffd700;
+  border-radius: 12px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.option-button {
+  padding: 12px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: #000a7c;
+  color: #fff;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-align: left;
+}
+
+.option-button span {
+  font-weight: bold;
+  color: #ffd700;
+  margin-right: 10px;
+}
+
+.option-button:hover {
+  background-color: #1c1cff;
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.option-button.selected {
+  background-color: #ff8c00; /* Orange color */
+  color: #000;
+}
+
+.option-button.correct {
+  background-color: green;
+  color: #fff;
+}
+
+.option-button.wrong {
+  background-color: red;
+  color: #fff;
+}
+
+/* --- ADDED THIS CLASS --- */
+.option-button.disabled {
+  background-color: #333;
+  color: #888;
+  border-color: #555;
+  cursor: not-allowed;
+  visibility: hidden; /* For 50/50 */
+}
+/* ------------------------- */
+
+
+#lifelines {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.lifeline {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.lifeline img {
+  width: 90px;
+  margin: 5px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.lifeline img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
+/* --- ADDED THIS CLASS --- */
+.lifeline.used img {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+/* ------------------------- */
+
+
+#prize-ladder {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.right-panel {
+  position: sticky;
+  top: 10px; /* small gap from top */
+  align-self: flex-start;
+  height: fit-content;
+}
+
+.prize-step {
+  padding: 6px 10px;
+  background-color: #13274f;
+  margin: 2px 0;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#prize-money {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.active-step {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+/* --- ADDED THIS CLASS --- */
+.safe-haven {
+  color: #00ff00; /* Green for safe haven levels */
+  font-weight: bold;
+}
+/* ------------------------- */
+
+#result {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .kbc-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+
+  #lifelines {
+    flex-direction: row; /* Changed back for quit button */
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kbc-logo {
+    width: 120px;
+  }
+}
+
+/* ===============================================
+NEW STYLES FOR FUNCTIONALITY (Added)
+===============================================
+*/
+
+/* --- Modal Base (for all popups) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-content {
+  background: #1a1a40;
+  border: 3px solid #ffd700;
+  border-radius: 15px;
+  padding: 25px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  text-align: center;
+}
+
+.modal-content h2 {
+  color: #ffd700;
+  margin-top: 0;
+}
+
+/* --- Start Game Modal --- */
+#start-modal input {
+  width: 80%;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 2px solid #ffd700;
+  background: #0b0c2a;
+  color: white;
+  margin: 15px 0;
+}
+
+#start-modal-btn {
+  padding: 12px 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #ffd700;
+  color: #0b0c2a;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#start-modal-btn:hover {
+  background-color: #ffeb80;
+}
+
+/* --- Game Over Modal --- */
+#game-over-modal .final-prize {
+  font-size: 1.5em;
+  color: #ffd700;
+  margin: 15px 0;
+  font-weight: bold;
+}
+#game-over-modal button {
+  padding: 12px 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #000a7c;
+  color: #fff;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background 0.3s;
+}
+#game-over-modal button:hover {
+  background-color: #1c1cff;
+}
+
+/* --- Poll Modal --- */
+#poll-chart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 200px;
+  margin-top: 20px;
+  border-bottom: 2px solid #ffd700;
+}
+.poll-bar {
+  width: 20%;
+  background-color: #000a7c;
+  border: 2px solid #ffd700;
+  border-bottom: none;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  transition: height 1s ease-out;
+}
+.poll-bar-label {
+  font-weight: bold;
+  position: absolute;
+  bottom: -25px;
+  width: 100%;
+  text-align: center;
+}
+.poll-bar-percent {
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+/* --- Phone Modal --- */
+#phone-modal-status {
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+#phone-modal-answer {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #ffd700;
+  display: none; /* Hidden initially */
+}
+#phone-modal-close {
+    display: none; /* Hidden initially */
+}
+
+/* Generic Modal Close Button */
+.modal-close-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: #000a7c;
+  color: #fff;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.modal-close-btn:hover {
+  background-color: #1c1cff;
+}
+
+/* --- Quit Game Button --- */
+#quit-button {
+  width: 90px;
+  height: 90px;
+  margin: 5px;
+  background-color: #c00;
+  border: 2px solid #ff5555;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.3em;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+  transition: background 0.3s, transform 0.2s;
+}
+
+#quit-button:hover {
+  background-color: #e00;
+  transform: scale(1.05);
+}
+
+/* --- Admin/Leaderboard/Host Page Styles --- */
+.admin-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #1a1a40;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+.admin-container h1, .admin-container h2 {
+  color: #ffd700;
+  border-bottom: 2px solid #ffd700;
+  padding-bottom: 10px;
+}
+.admin-container a {
+  color: #ffeb80;
+  font-weight: bold;
+}
+.admin-container button {
+  padding: 10px 15px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: #000a7c;
+  color: #fff;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background 0.3s;
+}
+.admin-container button:hover {
+  background-color: #1c1cff;
+}
+.admin-container button.delete-btn {
+  background-color: #c00;
+  border-color: #ff5555;
+}
+.admin-container button.delete-btn:hover {
+  background-color: #e00;
+}
+
+/* --- Admin Form --- */
+#admin-form {
+  background: #131339;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+#admin-form div {
+  margin-bottom: 10px;
+}
+#admin-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #ccc;
+  text-align: left;
+}
+#admin-form input[type="text"],
+#admin-form input[type="number"],
+#admin-form select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box; /* Important */
+  border-radius: 5px;
+  border: 2px solid #ffd700;
+  background: #0b0c2a;
+  color: white;
+  font-size: 1em;
+}
+
+/* --- Admin/Leaderboard Table --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.data-table th, .data-table td {
+  border: 1px solid #ffd700;
+  padding: 10px;
+  text-align: left;
+}
+.data-table th {
+  background-color: #000a7c;
+  color: #ffd700;
+}
+.data-table tr:nth-child(even) {
+  background-color: #131339;
+}
+
+
+/* ===============================================
+NEW STYLES FOR NEXT QUESTION BUTTON (Added)
+===============================================
+*/
+
+#next-question-btn {
+  display: block;
+  width: 80%;
+  margin: 20px auto 0; /* 20px top margin, auto horizontal, 0 bottom */
+  padding: 15px;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #ffd700;
+  color: #0b0c2a;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+#next-question-btn:hover {
+  background-color: #ffeb80;
+  transform: scale(1.03);
+}
