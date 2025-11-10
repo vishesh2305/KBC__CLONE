@@ -10,6 +10,29 @@ body {
 .container {
   max-width: 750px;
   margin: auto;
+  position: relative;
+}
+
+
+#admin-link-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffd700;
+  background: #1a1a40;
+  border: 1px solid #ffd700;
+  border-radius: 5px;
+  text-decoration: none;
+  z-index: 101; /* To be above other content */
+  opacity: 0.4; /* Make it subtle */
+  transition: opacity 0.3s;
+}
+
+#admin-link-button:hover {
+  opacity: 1; /* Show fully on hover */
 }
 
 .kbc-logo {
