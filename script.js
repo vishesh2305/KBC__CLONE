@@ -7,6 +7,13 @@ let usedPoll = false;
 let timerInterval;
 let timeLeft = 45; // seconds for each question
 
+// --- Audio Elements (ADDED) ---
+const clockAudio = new Audio('sounds/clock.mp3');
+clockAudio.loop = true; // Make the clock sound loop
+const correctAudio = new Audio('sounds/correctanswer.mp3');
+const wrongAudio = new Audio('sounds/wronganswer.mp3');
+// -----------------------------
+
 const prizeList = [
   "₹ 1,000",
   "₹ 2,000",
@@ -36,6 +43,11 @@ loadQuestion();
 
 function loadQuestion() {
   clearInterval(timerInterval);
+  // --- ADDED ---
+  clockAudio.pause(); // Stop clock sound when loading new question
+  clockAudio.currentTime = 0; // Reset clock sound
+  // -------------
+  
   timeLeft = 45;
   startTimer();
 
@@ -57,30 +69,62 @@ function loadQuestion() {
   highlightPrizeStep();
 }
 
+/**
+ * --- MODIFIED FUNCTION ---
+ * Turns selected button orange, plays sound, waits 7s, then shows result.
+ */
 function checkAnswer(selected, btn) {
+  // 1. Stop timer and clock immediately
   clearInterval(timerInterval);
+  clockAudio.pause();
+  
   const q = gameQuestions[currentQuestionIndex];
   const resultDiv = document.getElementById("result");
   const buttons = document.querySelectorAll("#answers .option-button");
+
+  // 2. Disable all buttons immediately
   buttons.forEach(b => b.disabled = true);
 
-  if (selected === q.correct) {
-    btn.classList.add("correct");
-    resultDiv.textContent = "✅ Correct!";
-    currentQuestionIndex++;
-    if (currentQuestionIndex < gameQuestions.length) {
-      setTimeout(() => {
-        resultDiv.textContent = "";
-        loadQuestion();
-      }, 1200);
-    } else {
-      resultDiv.textContent = "🎉 You've completed the game!";
-    }
+  // 3. (NEW) Turn selected button orange immediately
+  btn.classList.add("selected");
+  
+  const isCorrect = (selected === q.correct);
+
+  // 4. Play sound immediately
+  if (isCorrect) {
+    correctAudio.play();
   } else {
-    btn.classList.add("wrong");
-    resultDiv.textContent = "❌ Wrong! Game Over.";
+    wrongAudio.play();
   }
+
+  // 5. Delay visual feedback and next step by 7 seconds
+  setTimeout(() => {
+    // (NEW) Remove orange class
+    btn.classList.remove("selected");
+
+    if (isCorrect) {
+      btn.classList.add("correct");
+      resultDiv.textContent = "✅ Correct!";
+      currentQuestionIndex++;
+      
+      if (currentQuestionIndex < gameQuestions.length) {
+        // Wait 1.2s *after* showing result before loading next question
+        setTimeout(() => {
+          resultDiv.textContent = "";
+          loadQuestion();
+        }, 1200); 
+      } else {
+        resultDiv.textContent = "🎉 You've completed the game!";
+      }
+    } else {
+      btn.classList.add("wrong");
+      resultDiv.textContent = "❌ Wrong! Game Over.";
+      // Also show the correct answer
+      buttons[q.correct].classList.add("correct");
+    }
+  }, 7000); // 7-second delay
 }
+
 
 function use5050() {
   if (used5050) return alert("❗ You've already used 50-50.");
@@ -141,12 +185,18 @@ function highlightPrizeStep() {
 function startTimer() {
   const timerEl = document.getElementById("timer");
   timerEl.textContent = `⏳ Time Left: ${timeLeft}s`;
+  
+  clockAudio.play(); // --- ADDED ---
 
   timerInterval = setInterval(() => {
     timeLeft--;
     timerEl.textContent = `⏳ Time Left: ${timeLeft}s`;
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
+      // --- ADDED ---
+      clockAudio.pause(); // Stop clock sound
+      wrongAudio.play(); // Play wrong sound
+      // -------------
       document.getElementById("result").textContent = "⏰ Time's up! Game Over.";
       document.querySelectorAll("#answers .option-button").forEach(b => b.disabled = true);
     }

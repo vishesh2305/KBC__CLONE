@@ -87,6 +87,13 @@ h1 {
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
+/* --- ADDED THIS CLASS --- */
+.option-button.selected {
+  background-color: #ff8c00; /* Orange color */
+  color: #000;
+}
+/* ------------------------- */
+
 .option-button.correct {
   background-color: green;
   color: #fff;
