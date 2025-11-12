@@ -52,18 +52,14 @@ h1 {
   gap: 20px;
 }
 
-/* --- THIS SECTION IS REVERTED --- */
-/* (Back to the original solid color) */
 .left-panel {
   flex: 1 1 60%;
   min-width: 100px;
-  background-color: #1a1a40; /* <-- REVERTED */
+  background-color: #1a1a40;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-  /* Removed the background-image properties */
 }
-/* --- END OF MODIFICATION --- */
 
 .right-panel {
   flex: 1 1 35%;
@@ -74,42 +70,37 @@ h1 {
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
 }
 
-/* --- THIS SECTION WAS MODIFIED --- */
 #question {
   font-size: 1.3em;
   margin-bottom: 15px;
-  background-color: #000a7c; /* <-- REVERTED */
+  background-color: #000a7c;
   padding: 15px;
   border: 3px solid #ffd700;
-  border-radius: 50px; /* <-- CHANGED to 50px */
-  min-height: 80px; /* Added min-height */
+  border-radius: 50px;
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-/* --- END OF MODIFICATION --- */
-
 
 .options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 15px 0; /* 15px row gap, 0px column gap */
 }
 
-/* --- THIS SECTION WAS MODIFIED --- */
 .option-button {
   padding: 12px;
   font-size: 1em;
   font-weight: bold;
-  background-color: #000a7c; /* <-- REVERTED */
+  background-color: #000a7c;
   color: #fff;
   border: 2px solid #ffd700;
-  border-radius: 50px; /* <-- CHANGED to 50px */
+  /* border-radius: 50px; <-- This was removed */
   cursor: pointer;
   transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
   text-align: left;
 }
-/* --- END OF MODIFICATION --- */
 
 .option-button span {
   font-weight: bold;
@@ -117,18 +108,16 @@ h1 {
   margin-right: 10px;
 }
 
-/* --- THIS SECTION WAS MODIFIED --- */
 .option-button:hover {
-  background-color: #1c1cff; /* <-- REVERTED */
+  background-color: #1c1cff;
   transform: scale(1.03);
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .option-button.selected {
-  background-color: #ff8c00; /* Orange color */ /* <-- REVERTED */
-  color: #000; /* <-- REVERTED */
+  background-color: #ff8c00; /* Orange color */
+  color: #000;
 }
-/* --- END OF MODIFICATION --- */
 
 .option-button.correct {
   background-color: green;
@@ -140,7 +129,6 @@ h1 {
   color: #fff;
 }
 
-/* --- ADDED THIS CLASS --- */
 .option-button.disabled {
   background-color: #333;
   color: #888;
@@ -148,7 +136,6 @@ h1 {
   cursor: not-allowed;
   visibility: hidden; /* For 50/50 */
 }
-/* ------------------------- */
 
 
 #lifelines {
@@ -180,21 +167,10 @@ h1 {
   box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
 }
 
-/* --- ADDED THIS CLASS --- */
 .lifeline.used img {
   opacity: 0.3;
   cursor: not-allowed;
 }
-
-.lifeline.locked {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.lifeline.locked img {
-  cursor: not-allowed;
-}
-/* ------------------------- */
 
 
 #prize-ladder {
@@ -235,12 +211,10 @@ h1 {
   transform: scale(1.05);
 }
 
-/* --- ADDED THIS CLASS --- */
 .safe-haven {
   color: #00ff00; /* Green for safe haven levels */
   font-weight: bold;
 }
-/* ------------------------- */
 
 #result {
   margin-top: 20px;
@@ -568,3 +542,33 @@ NEW STYLES FOR NEXT QUESTION BUTTON (Added)
   background-color: #ffeb80;
   transform: scale(1.03);
 }
+
+/* --- ADDED FOR CONNECTED PILLS --- */
+.option-button:nth-child(odd) {
+  /* This styles buttons A and C (the left ones) */
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  /* Make the right border 1px, so it combines with the left button to make 2px */
+  border-right-width: 1px;
+}
+
+.option-button:nth-child(even) {
+  /* This styles buttons B and D (the right ones) */
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  /* Make the left border 1px */
+  border-left-width: 1px;
+}
+/* --- END OF NEW RULES --- */
+
+
+/* --- ADDED FOR LIFELINE LOCKING --- */
+.lifeline.locked {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lifeline.locked img {
+  cursor: not-allowed;
+}
+/* --- END OF NEW RULES --- */

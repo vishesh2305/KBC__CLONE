@@ -24,7 +24,9 @@ const KBC = {
   clockAudio: new Audio("sounds/clock.mp3"),
   correctAudio: new Audio("sounds/correctanswer.mp3"),
   wrongAudio: new Audio("sounds/wronganswer.mp3"),
-  
+  nextQuestionAudio: new Audio("sounds/nextquestionsound.mp3"),
+  gamestartAudio: new Audio("sounds/gamestartsound.mp3"), // <-- ADDED
+
   // --- Prize & Safe Haven Config ---
   prizeList: [
     "₹ 1,000",   // 0
@@ -95,6 +97,8 @@ const KBC = {
   // ------------------- Game Flow -------------------
 
   startGame: async function () {
+    this.gamestartAudio.play(); // <-- ADDED
+
     const playerName = this.Elements.playerNameInput.value.trim();
     if (!playerName) {
       alert("Please enter a name!");
@@ -133,8 +137,13 @@ const KBC = {
 
         this.gameInProgress = true;
         this.saveState();
-        this.loadQuestion();
-        this.updateLifelineUI();
+        
+        // Wait for 4 seconds (sound duration) before loading the first question
+        setTimeout(() => {
+            this.loadQuestion();
+            this.updateLifelineUI();
+        }, 4000); // 4000ms = 4 seconds
+
       } catch (error) {
         console.error("Error starting game:", error);
         this.Elements.questionEl.textContent = "Failed to load questions. Please try again later.";
@@ -143,6 +152,11 @@ const KBC = {
   },
 
   loadQuestion: function () {
+    // Play sound only if it's not the very first question
+    if (this.currentQuestionIndex > 0) {
+        this.nextQuestionAudio.play();
+    }
+
     this.Elements.nextQuestionBtn.style.display = 'none';
     this.Elements.resultEl.textContent = "";
 
