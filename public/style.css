@@ -52,14 +52,18 @@ h1 {
   gap: 20px;
 }
 
+/* --- THIS SECTION IS REVERTED --- */
+/* (Back to the original solid color) */
 .left-panel {
   flex: 1 1 60%;
   min-width: 100px;
-  background-color: #1a1a40;
+  background-color: #1a1a40; /* <-- REVERTED */
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  /* Removed the background-image properties */
 }
+/* --- END OF MODIFICATION --- */
 
 .right-panel {
   flex: 1 1 35%;
@@ -70,14 +74,21 @@ h1 {
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
 }
 
+/* --- THIS SECTION WAS MODIFIED --- */
 #question {
   font-size: 1.3em;
   margin-bottom: 15px;
-  background-color: #000a7c;
+  background-color: #000a7c; /* <-- REVERTED */
   padding: 15px;
   border: 3px solid #ffd700;
-  border-radius: 12px;
+  border-radius: 50px; /* <-- CHANGED to 50px */
+  min-height: 80px; /* Added min-height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+/* --- END OF MODIFICATION --- */
+
 
 .options-grid {
   display: grid;
@@ -85,18 +96,20 @@ h1 {
   gap: 15px;
 }
 
+/* --- THIS SECTION WAS MODIFIED --- */
 .option-button {
   padding: 12px;
   font-size: 1em;
   font-weight: bold;
-  background-color: #000a7c;
+  background-color: #000a7c; /* <-- REVERTED */
   color: #fff;
   border: 2px solid #ffd700;
-  border-radius: 12px;
+  border-radius: 50px; /* <-- CHANGED to 50px */
   cursor: pointer;
   transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
   text-align: left;
 }
+/* --- END OF MODIFICATION --- */
 
 .option-button span {
   font-weight: bold;
@@ -104,16 +117,18 @@ h1 {
   margin-right: 10px;
 }
 
+/* --- THIS SECTION WAS MODIFIED --- */
 .option-button:hover {
-  background-color: #1c1cff;
+  background-color: #1c1cff; /* <-- REVERTED */
   transform: scale(1.03);
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .option-button.selected {
-  background-color: #ff8c00; /* Orange color */
-  color: #000;
+  background-color: #ff8c00; /* Orange color */ /* <-- REVERTED */
+  color: #000; /* <-- REVERTED */
 }
+/* --- END OF MODIFICATION --- */
 
 .option-button.correct {
   background-color: green;
@@ -168,6 +183,15 @@ h1 {
 /* --- ADDED THIS CLASS --- */
 .lifeline.used img {
   opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lifeline.locked {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lifeline.locked img {
   cursor: not-allowed;
 }
 /* ------------------------- */

@@ -24,8 +24,7 @@ const KBC = {
   clockAudio: new Audio("sounds/clock.mp3"),
   correctAudio: new Audio("sounds/correctanswer.mp3"),
   wrongAudio: new Audio("sounds/wronganswer.mp3"),
-  // (Removed suspenseAudio as it's no longer needed for this logic)
-
+  
   // --- Prize & Safe Haven Config ---
   prizeList: [
     "₹ 1,000",   // 0
@@ -87,6 +86,8 @@ const KBC = {
     if (this.gameInProgress) {
       console.log("Found game in progress, but starting new game for new questions.");
       this.clearState();
+      this.Elements.startModal.classList.add("visible");
+    } else {
       this.Elements.startModal.classList.add("visible");
     }
   },
@@ -155,11 +156,6 @@ const KBC = {
     this.gameState.score = this.currentQuestionIndex > 0 ? this.prizeScores[this.currentQuestionIndex - 1] : 0;
     this.saveState();
 
-    clearInterval(this.timerInterval);
-    this.clockAudio.pause();
-    this.clockAudio.currentTime = 0;
-    this.timeLeft = 45;
-
     const q = this.gameQuestions[this.currentQuestionIndex];
     
     if (!q || !q.question || !q.answers || q.answers.length !== 4) {
@@ -182,19 +178,23 @@ const KBC = {
       this.Elements.answersEl.appendChild(btn);
     });
 
+    // --- NEW LIFELINE LOCK LOGIC ---
+    const lifelines = document.querySelectorAll('.lifeline');
+    // Lock for first 3 questions (index 0, 1, 2)
+    if (this.currentQuestionIndex < 3) { 
+        lifelines.forEach(ll => ll.classList.add('locked'));
+    } else {
+        lifelines.forEach(ll => ll.classList.remove('locked'));
+    }
+    // --- END NEW LOGIC ---
+
     this.highlightPrizeStep();
     this.startTimer();
   },
 
-  /**
-   * ===============================================
-   * MODIFIED FUNCTION
-   * ===============================================
-   */
   checkAnswer: function (selected, btn) {
     // 1. Stop timer and clock immediately
-    clearInterval(this.timerInterval);
-    this.clockAudio.pause();
+    this.pauseTimer(); // <-- MODIFIED
 
     const q = this.gameQuestions[this.currentQuestionIndex];
     const buttons = this.Elements.answersEl.querySelectorAll(".option-button");
@@ -247,24 +247,17 @@ const KBC = {
       }
     }, 7500); // 6-second delay as requested
   },
-  /**
-   * ===============================================
-   * END OF MODIFIED FUNCTION
-   * ===============================================
-   */
 
   quitGame: function () {
     const currentPrize = this.currentQuestionIndex > 0 ? this.prizeList[this.currentQuestionIndex - 1] : "₹0";
     if (confirm(`Are you sure you want to walk away with ${currentPrize}?`)) {
-        clearInterval(this.timerInterval);
-        this.clockAudio.pause();
+        this.pauseTimer(); // <-- MODIFIED
         this.endGame(true, "You decided to walk away.");
     }
   },
 
   endGame: async function (isWinner, message) {
-    clearInterval(this.timerInterval);
-    this.clockAudio.pause();
+    this.pauseTimer(); // <-- MODIFIED
     this.gameInProgress = false;
 
     let finalPrize = "₹0";
@@ -319,7 +312,14 @@ const KBC = {
   // ------------------- Lifelines -------------------
 
   use5050: function (btn) {
+    // --- NEW CHECKS ---
+    if (this.currentQuestionIndex < 3) {
+        alert("Lifelines are available after Question 3!");
+        return;
+    }
     if (this.gameState.lifelinesUsed["5050"]) return;
+    // --- END NEW CHECKS ---
+
     this.gameState.lifelinesUsed["5050"] = true;
     btn.classList.add("used");
     this.saveState();
@@ -340,39 +340,41 @@ const KBC = {
   },
 
   usePhone: function (btn) {
+    // --- NEW CHECKS ---
+    if (this.currentQuestionIndex < 3) {
+        alert("Lifelines are available after Question 3!");
+        return;
+    }
     if (this.gameState.lifelinesUsed.phone) return;
+    // --- END NEW CHECKS ---
+
+    this.pauseTimer(); // <-- ADDED: Stop the clock
+
     this.gameState.lifelinesUsed.phone = true;
     btn.classList.add("used");
     this.saveState();
-
-    const q = this.gameQuestions[this.currentQuestionIndex];
-    // 80% chance of being correct
-    const guess = Math.random() < 0.8 ? q.correct : Math.floor(Math.random() * 4);
-    const labels = ["A", "B", "C","D"];
     
+    // --- MODIFIED LOGIC ---
     const statusEl = document.getElementById('phone-modal-status');
-    const answerEl = document.getElementById('phone-modal-answer');
     const closeBtn = document.getElementById('phone-modal-close');
 
-    statusEl.textContent = "Calling your friend... ☎️";
-    answerEl.style.display = 'none';
-    closeBtn.style.display = 'none';
+    statusEl.textContent = "Calling... ☎️ The game is paused. Make your call manually. Press OK to resume.";
+    closeBtn.style.display = 'inline-block'; // Show close button
     this.showModal('phone-modal');
-
-    setTimeout(() => {
-        statusEl.textContent = "Your friend is thinking... 🤔";
-    }, 2000);
-
-    setTimeout(() => {
-        statusEl.textContent = "Got an answer!";
-        answerEl.querySelector('strong').textContent = `${labels[guess]}. ${q.answers[guess]}`;
-        answerEl.style.display = 'block';
-        closeBtn.style.display = 'inline-block';
-    }, 5000);
+    // --- END MODIFIED LOGIC ---
   },
 
   usePoll: function (btn) {
+    // --- NEW CHECKS ---
+    if (this.currentQuestionIndex < 3) {
+        alert("Lifelines are available after Question 3!");
+        return;
+    }
     if (this.gameState.lifelinesUsed.poll) return;
+    // --- END NEW CHECKS ---
+
+    this.pauseTimer(); // <-- ADDED: Stop the clock
+    
     this.gameState.lifelinesUsed.poll = true;
     btn.classList.add("used");
     this.saveState();
@@ -419,21 +421,39 @@ const KBC = {
 
   // ------------------- Helpers -------------------
 
-  startTimer: function () {
-    this.Elements.timerEl.textContent = `⏳ Time Left: ${this.timeLeft}s`;
-    this.clockAudio.play();
-
-    this.timerInterval = setInterval(() => {
-      this.timeLeft--;
-      this.Elements.timerEl.textContent = `⏳ Time Left: ${this.timeLeft}s`;
-      if (this.timeLeft <= 0) {
-        clearInterval(this.timerInterval);
-        this.clockAudio.pause();
-        this.wrongAudio.play();
-        this.endGame(false, "⏰ Time's up! Game Over.");
-      }
-    }, 1000);
+  // --- NEW TIMER FUNCTIONS ---
+  pauseTimer: function () {
+    clearInterval(this.timerInterval);
+    this.clockAudio.pause();
   },
+
+  resumeTimer: function () {
+    if (this.gameInProgress && this.timeLeft > 0) { // Only resume if game is on
+        this.clockAudio.play();
+        this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            this.Elements.timerEl.textContent = `⏳ Time Left: ${this.timeLeft}s`;
+            if (this.timeLeft <= 0) {
+                clearInterval(this.timerInterval);
+                this.clockAudio.pause();
+                this.wrongAudio.play();
+                this.endGame(false, "⏰ Time's up! Game Over.");
+            }
+        }, 1000);
+    }
+  },
+
+  startTimer: function () {
+    this.timeLeft = 45; // Reset time
+    this.Elements.timerEl.textContent = `⏳ Time Left: ${this.timeLeft}s`;
+    
+    // Stop any existing timer before starting a new one
+    this.pauseTimer();
+    this.clockAudio.currentTime = 0;
+
+    this.resumeTimer(); // Use resumeTimer to start the clock
+  },
+  // --- END NEW TIMER FUNCTIONS ---
 
   highlightPrizeStep: function () {
     this.Elements.prizeLadderEl.innerHTML = "";
@@ -453,6 +473,13 @@ const KBC = {
 
   closeModal: function (modalId) {
     document.getElementById(modalId).classList.remove("visible");
+
+    // --- NEW LOGIC ---
+    // Resume timer if it's a lifeline modal
+    if (modalId === 'phone-modal' || modalId === 'poll-modal') {
+        this.resumeTimer();
+    }
+    // --- END NEW LOGIC ---
   },
 
   // --- Persistent State ---
